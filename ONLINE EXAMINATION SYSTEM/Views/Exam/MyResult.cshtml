@@ -1,0 +1,86 @@
+﻿@model ONLINE_EXAMINATION_SYSTEM.Models.Result
+@{
+    ViewBag.Title = "Exam Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .result-wrapper {
+        background: linear-gradient(to bottom right, #e3f2fd, #ffffff);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .result-card {
+        border-radius: 20px;
+        background-color: #fff;
+        transition: transform 0.3s ease;
+        width: 100%;
+        max-width: 700px;
+    }
+
+        .result-card:hover {
+            transform: scale(1.02);
+        }
+
+    .score-box h1{
+        font-weight: 800;
+        color: #28a745;
+    }
+
+    .result-summary h5 {
+        font-weight: bold;
+    }
+
+    .btn-custom {
+        padding: 10px 25px;
+        font-weight: 500;
+    }
+</style>
+
+<div class="container result-wrapper">
+    <div class="card result-card text-center shadow-lg p-4">
+        <h2 class="mb-3 text-primary fw-bold">🎉 Exam Completed!</h2>
+        <h4 class="mb-2">Hi @Model.StundentName, your result is here 👇</h4>
+
+        <div class="score-box my-4">
+            <h1 class="display-3">@Model.Score / @Model.TotalMarks</h1>
+            <p class="text-muted">Your Score</p>
+        </div>
+
+        <div class="progress my-4">
+            <div class="progress-bar bg-success" role="progressbar"
+                 style="width: @Model.Percentage"% aria-valuenow="@Model.Percentage"
+                 aria-valuemin="0" aria-valuemax="100">
+                @Model.Percentage%
+            </div>
+        </div>
+
+        <div class="row result-summary mt-5">
+            <div class="col-md-4 mb-3">
+                <h5 class="text-success">✅ Correct</h5>
+                <p>@Model.CorrectAnswers</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5 class="text-danger">❌ Incorrect</h5>
+                <p>@Model.WrongAnswers</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5 class="text-secondary">❓ Not Attempted</h5>
+                <p>@Model.NotAttempted</p>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="@Url.Action("Dashboard", "Dashboard")" class="btn btn-primary btn-custom">🏠 Go to Dashboard</a>
+            <a href="@Url.Action("ReviewAnswers", "Exam", new { examId = Model.ExamId })" class="btn btn-outline-dark btn-custom ms-3">📋 Review Answers</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+

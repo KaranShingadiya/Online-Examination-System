@@ -1,0 +1,247 @@
+﻿@model List<ONLINE_EXAMINATION_SYSTEM.Models.Exam>
+@{
+    ViewBag.Title = "ExamQuestions";
+}
+
+
+<div class="logo-container">
+    <img src="~/Content/Images/Header.png" alt="College Logo">
+</div>
+
+<h2 class="exam-title">📝 Online Examination</h2>
+
+<!-- Timer UI -->
+<div class="timer-container">
+    <svg class="progress-ring" width="120" height="120">
+        <circle class="progress-ring-circle" stroke="green" stroke-width="10" fill="transparent" r="50" cx="60" cy="60" />
+    </svg>
+    <div id="timer" class="timer-text">Time Left: <span id="timeLeft">@ViewBag.TimeLimit:00</span></div>
+</div>
+
+<form action="@Url.Action("SubmitExam", "Exam")" method="post" id="examForm">
+    
+    <input type="hidden" name="examId" value="@ViewBag.ExamId" />
+
+    @foreach (var question in Model.Select((q, index) => new { q, index }))
+    {
+        var inputName = $"answers_{question.index}";
+        <div class="question-card">
+            <p class="question-text"><strong>Q@(question.index+ 1).</strong> @question.q.question</p>
+
+            <label class="option">
+                <input type="radio" name="@inputName" data-question-id="@question.q.questionId" value="A"> <span>@question.q.option_A</span>
+            </label>
+            <label class="option">
+                <input type="radio" name="@inputName" data-question-id="@question.q.questionId" value="B"> <span>@question.q.option_B</span>
+            </label>
+            <label class="option">
+                <input type="radio" name="@inputName" data-question-id="@question.q.questionId" value="C"> <span>@question.q.option_C</span>
+            </label>
+            <label class="option">
+                <input type="radio" name="answers_@question.q.questionId" data-question-id="@question.q.questionId" value="D"> <span>@question.q.option_D</span>
+            </label>
+        </div>
+    }
+
+    <input type="hidden" id="answersHidden" name="answersJson" />
+    <button type="submit" id="submitBtn" class="submit-btn">Submit Exam</button>
+</form>
+
+
+<div id="popup" class="popup hidden">
+    <div class="popup-content">
+        <h2>🎉 Exam Submitted Successfully!</h2>
+        <p>Thank you for completing the exam. Your answers have been recorded.</p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+</div>
+
+<script>
+
+let timeLeft = localStorage.getItem("examTimer") ? parseInt(localStorage.getItem("examTimer")) : @ViewBag.TimeLimit * 60;
+const timerDisplay = document.getElementById("timeLeft");
+const progressRing = document.querySelector(".progress-ring-circle");
+
+function updateTimer() {
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    timerDisplay.innerText = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+    if (timeLeft <= 30) {
+        progressRing.style.stroke = "red";
+        timerDisplay.style.color = "red";
+    }
+
+    if (timeLeft <= 0) {
+        document.getElementById("submitBtn").click();
+    } else {
+        timeLeft--;
+        localStorage.setItem("examTimer", timeLeft);
+        setTimeout(updateTimer, 1000);
+    }
+}
+updateTimer();
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    let storedAnswers = JSON.parse(localStorage.getItem("examAnswers")) || {};
+
+    document.querySelectorAll("input[type='radio']").forEach(radio => {
+        const questionId = radio.getAttribute("data-question-id");
+        const name = "answers_" + questionId;
+
+        if (storedAnswers[questionId] === radio.value) {
+            radio.checked = true;
+        }
+
+        radio.addEventListener("change", function () {
+            storedAnswers[questionId] = this.value;
+            localStorage.setItem("examAnswers", JSON.stringify(storedAnswers));
+        });
+    });
+});
+
+
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+        alert("❌ You cannot switch tabs during the exam!");
+        document.location.reload();
+    }
+});
+
+
+document.getElementById("examForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const storedAnswers = JSON.parse(localStorage.getItem("examAnswers")) || {};
+    document.getElementById("answersHidden").value = JSON.stringify(storedAnswers);
+
+    localStorage.removeItem("examTimer");
+    localStorage.removeItem("examAnswers");
+
+    showPopup();
+});
+
+function showPopup() {
+    document.getElementById("popup").classList.remove("hidden");
+}
+function closePopup() {
+    document.getElementById("popup").classList.add("hidden");
+    document.getElementById("examForm").submit();
+}
+</script>
+
+<style>
+    .exam-title {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .logo-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+        .logo-container img {
+            max-width: 500px;
+            height: auto;
+        }
+
+    .timer-container {
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        margin: 20px auto;
+    }
+
+    .progress-ring {
+        transform: rotate(-90deg);
+    }
+
+    .progress-ring-circle {
+        transition: stroke 0.3s;
+    }
+
+    .timer-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+    }
+
+    .question-card {
+        background: #f9f9f9;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .question-text {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .option {
+        display: block;
+        padding: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+        .option:hover {
+            background: #e0f7fa;
+        }
+
+    .submit-btn {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 15px;
+        background: #007bff;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .popup.hidden {
+            display: none;
+        }
+
+    .popup-content {
+        background: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+    }
+
+        .popup-content h2 {
+            margin-bottom: 10px;
+        }
+
+        .popup-content button {
+            padding: 8px 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+</style>

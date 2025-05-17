@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Logout";
+}
+
+<html>
+<head>
+    <style>
+        /* Container for the entire logout page */
+        .logout-page-container {
+            background-color: #f0f8ff;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Box styling with shadow */
+        .shadow-box {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            background-color: #ffffff;
+            padding: 2rem 3rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Logout icon styling */
+        .logout-icon {
+            width: 80px;
+            margin-bottom: 20px;
+        }
+
+        /* Header styling */
+        .logout-header {
+            color: #0066cc;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Message styling */
+        .logout-message {
+            color: #555;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        /* Button styling */
+        .btn-custom {
+            background-color: #0066cc;
+            color: white;
+            border-color: #0066cc;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            border-radius: 8px;
+            margin: 10px 5px;
+            text-decoration: none;
+        }
+
+            .btn-custom:hover {
+                background-color: #005bb5;
+                border-color: #005bb5;
+            }
+
+        .btn-custom-outline {
+            background-color: transparent;
+            color: #0066cc;
+            border: 2px solid #0066cc;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            margin: 10px 5px;
+        }
+
+            .btn-custom-outline:hover {
+                background-color: #e6f0ff;
+            }
+
+        /* Support link styling */
+        .support-link {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+            .support-link:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="logout-page-container">
+        <div class="shadow-box text-center">
+            <img src="~/Content/Images/test.png" alt="Logout Icon" class="logout-icon" />
+
+            <h2 class="logout-header">You have Successfully Logged Out!</h2>
+            <p class="logout-message">Thank you for using the Online Examination System. We hope to see you back soon!</p>
+
+            <div class="mt-4">
+                <a href="@Url.Action("AdminPanelLogin", "Login")" class="btn btn-custom">Log In Again</a>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

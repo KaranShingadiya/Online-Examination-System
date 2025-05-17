@@ -1,0 +1,91 @@
+﻿@model AdminPanel.Models.Students
+@{
+    ViewBag.Title = "EditStudents";
+}
+
+<html>
+<head>
+    <style>
+        .centered-from {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            width: 350px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="centered-from">
+        <div class="form-container">
+            <h2>Edit Student</h2>
+            @using (Html.BeginForm())
+            {
+
+
+                <div class="form-group">
+                    @Html.HiddenFor(model => model.exmne_Id, new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Full-Name")
+                    @Html.TextBoxFor(model => model.exmne_Fullname, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.exmne_Fullname, "", new { @class = "text-danger" })
+                </div>
+
+
+
+                <div class="form-group">
+                    @Html.Label("Course")
+                    @Html.TextBoxFor(model => model.exmne_CourseName,null, new { @class = "form-control",@readonly="readonly" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Class")
+                    @Html.TextBoxFor(model => model.exmne_ClassId, new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Gender")
+                    @Html.TextBoxFor(model => model.exmne_Gender, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("Birth-date")
+                    @Html.TextBoxFor(model => model.exmne_Birthdate, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("Year-level")
+                    @Html.TextBoxFor(model => model.exmne_Yearlevel, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("Username")
+                    @Html.TextBoxFor(model => model.exmne_Username,null, new { @class = "form-control",@readonly="readonly" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("Password")
+                    @Html.TextBoxFor(model => model.exmne_Password,null, new { @class = "form-control",@readonly="readonly" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Status")
+                    @Html.TextBoxFor(model => model.exmne_Status, new { @class = "form-control" })
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="@Url.Action("ManageStudents", "Admin")" class="btn btn-secondary">Back to Students</a>
+            }
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+

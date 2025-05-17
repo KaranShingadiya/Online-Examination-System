@@ -1,0 +1,127 @@
+﻿@model AdminPanel.Models.Exam
+@{
+    ViewBag.Title = "EditExam";
+}
+<h2>Edit Exam</h2>
+<html>
+<head>
+    <style>
+        .centered-from {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            width: 350px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="centered-from">
+        <div class="form-container">
+      
+                <h3>Edit Exam</h3>
+                <form action="@Url.Action("EditExam","Admin")" method="post">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.exam_Id)
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Select-Course")
+                         @Html.TextBoxFor(model => model.exam_CourseId,null,new { @class="form-control",@readonly="readonly"})
+                     @*   @Html.DropDownListFor(model => model.exam_CourseId, (SelectList)ViewBag.CourseList, "Select Course", new { @class = "form-control", id = "courseDropdown" })*@
+                        @Html.ValidationMessageFor(model => model.exam_CourseId, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Select-Class")
+                        @Html.TextBoxFor(model => model.exam_ClassId,null, new {@class="form-control",@readonly="readonly"})
+                        @*@Html.DropDownListFor(model => model.exam_ClassId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "Select-Class", new { @class = "form-control", id = "classDropdown" })*@
+                        @Html.ValidationMessageFor(model => model.exam_ClassId, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Select-Time")
+                        @*     @Html.TextBoxFor(model => model.exam_TimeValue, new {@class="form-control"})*@
+                        @Html.DropDownListFor(model => model.exam_TimeValue, (SelectList)ViewBag.TimeList, "Select Time", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.exam_TimeValue, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Question Limit to Display")
+                        @Html.TextBoxFor(model => model.exam_QuestionLimitDisplay, new { @class = "form-control", type = "number", min = "1", max = "100", placeholder = "Input question limit to display" })
+                        @Html.ValidationMessageFor(model => model.exam_QuestionLimitDisplay, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Exam-Title")
+                        @Html.TextBoxFor(model => model.exam_Title, new { @class = "form-control", placeholder = "Please Enter Exam Title" })
+                        @Html.ValidationMessageFor(model => model.exam_Title, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Exam-Description")
+                        @Html.TextAreaFor(model => model.exam_Description, new { @class = "form-control", placeholder = "Please Enter Exam Description" })
+                        @Html.ValidationMessageFor(model => model.exam_Description, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-warning">Update</button>
+                        <a href="@Url.Action("ManageExam", "Admin")" class="btn btn-secondary">Back to ManageExam</a>
+                    </div>
+                </form>
+        </div>
+        </div>
+    </body>
+</html>
+        <script>
+    //get Course & On Course => Class
+    $(document).ready(function () {
+        $("#courseDropdown").change(function () {
+            debugger
+            var courseid = $(this).val();
+            //alert(catid);
+            if (courseid) {
+            $.ajax({
+
+                url: '@Url.Action("getStudentClass","Admin")',
+                type: 'POST',
+                data: { courseid: courseid }, //before :is variable after : is value
+
+                success: function (data) {
+                    if (data.length > 0) {
+
+                        var classDropdown = $('#classDropdown');
+                        alert
+                        classDropdown.empty(); //clear existing options
+                        classDropdown.append('<option value="">Select class</option>')
+
+                        $.each(data, function (index, item) {
+                            classDropdown.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                        });
+                    }
+                    else {
+                        $('#classDropdown').empty().append('<option value="">No classes available</option>');
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                     alert("Error loading classes:" + error);
+                }
+            });
+        }
+        else
+            {
+            $('#classDropdown').empty().append('<option value="">Select Class</option>');
+        }
+
+        });
+    });
+
+
+
+        </script>

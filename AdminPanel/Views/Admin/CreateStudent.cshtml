@@ -1,0 +1,213 @@
+﻿@model AdminPanel.Models.Students
+@{
+    ViewBag.Title = "CreateStudent";
+}
+
+
+<html>
+<head>
+    <style>
+        .centered-from {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            width: 350px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="centered-from">       
+        <div class="form-container">
+            <form action="@Url.Action("CreateStudent","Admin")" method="post">
+                <h3>Create New Student</h3>                
+
+                <div class="form-group">
+                    @Html.Label("Full-Name")
+                    @Html.TextBoxFor(model => model.exmne_Fullname, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.exmne_Fullname, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Birth-Date")
+                    @Html.TextBoxFor(model => model.exmne_Birthdate, new { @type = "date", @class = "form-control", id="Birthdate" })
+                    @Html.ValidationMessageFor(model => model.exmne_Birthdate, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Gender")
+                    @Html.DropDownListFor(model =>model.exmne_Gender,(SelectList)ViewBag.StudentGenderList,"Select Gender", new {@class="form-control"})
+                    @Html.ValidationMessageFor(model => model.exmne_Gender, "", new {@class="text-danger"})
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Select-Course")
+                    @Html.DropDownListFor(model => model.exmne_CourseId, (SelectList)ViewBag.CourseList, "Select Course", new { @class = "form-control", id = "courseDropdown" })
+                    @Html.ValidationMessageFor(model => model.exmne_CourseId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Select-Class")
+                    @Html.DropDownListFor(model => model.exmne_ClassId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "Select-Class", new { @class = "form-control", id = "classDropdown" })
+                    @Html.ValidationMessageFor(model => model.exmne_ClassId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Select-RollNo")
+                    @Html.DropDownListFor(model => model.exmne_RollnoId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "Select-RollNumber", new { @class = "form-control", id = "rollnoDropdown" })
+                    @Html.ValidationMessageFor(model => model.exmne_RollnoId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Year-Level")
+                    @Html.DropDownListFor(model => model.exmne_Yearlevel,(SelectList)ViewBag.StudentYearList, "Select Year", new {@class="form-control"})
+                    @Html.ValidationMessageFor(model => model.exmne_Yearlevel, "", new {@class="text-danger"})
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Username")
+                    @Html.TextBoxFor(model =>model.exmne_Username,null, new {@class="form-control",@readonly="readonly",id="Username"})
+
+                </div>
+                <div class="form-group">
+                    @Html.Label("Password")
+                    @Html.PasswordFor(model => model.exmne_Password, new {@class="form-control",@readonly="readonly",id="Password"})
+                </div>
+                <button type="submit" class="btn btn-success">Create</button>
+                <a href="@Url.Action("ManageStudents", "Admin")" class="btn btn-secondary">Back to Users</a>
+                </form>
+        </div>       
+    </div>
+</body>
+</html>
+<script>
+//Ajax Implement
+
+//get Course & On Course => Class
+    $(document).ready(function () {
+        $("#courseDropdown").change(function () {
+            debugger
+            var courseid = $(this).val();
+            //alert(catid);
+            if (courseid) {
+            $.ajax({
+
+                url: '@Url.Action("getStudentClass","Admin")',
+                type: 'POST',
+                data: { courseid: courseid }, //before :is variable after : is value
+
+                success: function (data) {
+                    if (data.length > 0) {
+
+                        var classDropdown = $('#classDropdown');
+                        alert
+                        classDropdown.empty(); //clear existing options
+                        classDropdown.append('<option value="">Select class</option>')
+
+                        $.each(data, function (index, item) {
+                            classDropdown.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                        });
+                    }
+                    else {
+                        $('#classDropdown').empty().append('<option value="">No classes available</option>');
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error loading classes:" + error);
+                }
+            });
+        }
+        else
+            {
+            $('#classDropdown').empty().append('<option value="">Select Class</option>');
+        }
+
+        });
+    });
+
+
+//Roll Number
+
+    $(document).ready(function () {
+    $("#classDropdown").change(function () {
+        debugger
+        var classid = $(this).val();
+        //alert(catid);
+        if (classid) {
+        $.ajax({
+
+            url: '@Url.Action("getStudentRollno","Admin")',
+            type: 'POST',
+            data: { classid: classid }, //before :is variable after : is value
+
+            success: function (data) {
+                if (data.length > 0) {
+
+                    var classDropdown = $('#rollnoDropdown');
+                    alert
+                    classDropdown.empty(); //clear existing options
+                    classDropdown.append('<option value="">Select Rollno</option>')
+
+                    $.each(data, function (index, item) {
+                        classDropdown.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    });
+                }
+                else {
+                    $('#rollnoDropdown').empty().append('<option value="">No Rollno available</option>');
+                }
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error loading rollno:" + error);
+            }
+        });
+    }
+    else
+        {
+        $('#rollnoDropdown').empty().append('<option value="">Select Rollno</option>');
+    }
+
+    });
+});
+
+
+    //Create Username & Password
+    $(document).ready(function (){
+        $('#courseDropdown, #classDropdown, #rollnoDropdown').change(function () {
+            var course = $('#courseDropdown').val();
+            var className = $('#classDropdown option:selected').text();
+            var rollNo = $('#rollnoDropdown option:selected').text();
+
+            if (className && className !== "Select class" && rollNo && rollNo !=="Select-RollNumber") {
+                var username = className + "_" + rollNo; //Combine class and roll number means one type of concatination.
+                $('#Username').val(username);
+            }
+            else {
+                $('#Username').val(''); // Reset if any value is empty.
+            }
+        });
+  
+
+
+    $('#Birthdate').change(function () {
+        var birthDate = $('#Birthdate').val();
+
+        if (birthDate) {
+
+            var dateParts = birthDate.split("-");
+            var formattedDate = dateParts[2] + dateParts[1] + dateParts[0];
+
+            $('#Password').val(formattedDate)
+        } else {
+            ('#Password').val('');
+        }
+        });
+    });
+</script>

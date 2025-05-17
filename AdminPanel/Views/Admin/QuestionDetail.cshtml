@@ -1,0 +1,70 @@
+﻿@model List<AdminPanel.Models.Exam>
+@{
+    ViewBag.Title = "QuestionDetail";
+}
+<html>
+<head>
+    <h2>QuestionDetail</h2>
+
+    <br />
+    <br />
+    @if (TempData["success"] != null)
+    {
+        <span class="alert alert-success">@TempData["success"]</span>
+    }
+    else
+    {
+        <span class="alert alert-danger">@TempData["danger"]</span>
+    }
+    <br />
+    <br />
+ 
+
+</head>
+<body>
+    <div class="container mt-4">
+        <a href="@Url.Action("AddQuestion", "Admin")" class="btn btn-info" style="float:right;">Add Question</a>
+        <a href="@Url.Action("ManageExam","Admin")" class="btn btn-info"><i class="fa fa-arrow-left"></i>&nbsp;Back to ManageExam</a>
+        <table class="table table-responsive table-stripped table-bordered">
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th style="width:15%">Action</th>
+                </tr>
+            </thead>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tbody>
+                        <tr>
+                            <td>
+                                <b>@item.que_Id.)</b><b>@item.exam_Question</b>
+                                <div>A.<span style="color :@(item.exam_Option_1==item.exam_CorrectAnswer ? "green" : "black")">@item.exam_Option_1</span></div>
+                                <div>B.<span style="color :@(item.exam_Option_2==item.exam_CorrectAnswer ? "green" : "black")">@item.exam_Option_2</span></div>
+                                <div>C.<span style="color :@(item.exam_Option_3==item.exam_CorrectAnswer ? "green" : "black")">@item.exam_Option_3</span></div>
+                                <div>D.<span style="color :@(item.exam_Option_4==item.exam_CorrectAnswer ? "green" : "black")">@item.exam_Option_4</span></div>
+                            </td>
+
+                            <td>
+                                <a href="@Url.Action("UpdateQuestion", "Adminnew", new {id=item.que_Id})" class="btn btn-primary">Update</a> &nbsp;
+                                <a href="@Url.Action("DeleteQuestion", "Admin", new {id=item.que_Id})" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center">No users found.</td>
+                </tr>
+            }
+
+        </table>
+    </div>
+
+</body>
+</html>
+
+

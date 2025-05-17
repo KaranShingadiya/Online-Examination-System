@@ -1,0 +1,54 @@
+﻿@model List<AdminPanel.Models.Course>
+@{
+    ViewBag.Title = "ManageCourse";
+}
+
+<h2>ManageCourse</h2>
+<br />
+<br />
+@if (TempData["success"] != null)
+{
+    <span class="alert alert-success">@TempData["success"]</span>
+}
+else
+{
+    <span class="alert alert-danger">@TempData["error"]</span>
+}
+
+<br />
+<br />
+
+<link rel="stylesheet" href="~/Css/button.css" />
+
+
+<a href="@Url.Action("Admin","Admin")" style="border-radius:16px;" class="btn btn-info"><i class="fa fa-arrow-left"></i>&nbsp;Back to Dashboard</a>
+<a href="@Url.Action("AddCourse","Admin")" style="float:right" class="btn btn-primary">Add Course</a>
+<table class="table table-responsive table-stripped table-bordered ">
+    <tr>
+        <th>Course Id</th>
+        <th>Course Name</th>
+        <th>Action</th>
+
+    </tr>
+    @foreach (var course in Model)
+    {
+        <tr>
+            <td>@course.course_Id</td>
+            <td>@course.course_Name</td>
+            <td>
+                <a href="@Url.Action("EditCourse","Admin" , new {course_Id =course.course_Id})" class="btn btn-primary"><i class="fas fa-pen"></i></a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" onclick="DeleteConfirm(course_Id=@course.course_Id)" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+            </td>
+        </tr>
+    }
+</table>
+<script>
+    function DeleteConfirm(course_Id) {
+        var isconfirmred = confirm("Are You Sure Want Delete Course With Id : " + course_Id + "?");
+        if (isconfirmred) {
+            window.location.href = '@Url.Action("DeleteCourse","Admin")' + '?course_Id=' + course_Id;
+        }
+    }
+</script>
+

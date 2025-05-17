@@ -1,0 +1,26 @@
+﻿@model List<AdminPanel.Models.Feedbacks>
+@{
+    ViewBag.Title = "Feedbacks";
+}
+
+<h2>Feedbacks</h2>
+<br />
+<br />
+<link rel="stylesheet" href="~/Css/button.css" />
+<a href="@Url.Action("Admin","Admin")" class="btn btn-info"><i class="fa fa-arrow-left"></i>&nbsp;Back to Dashboard</a>
+<table class="table table-responsive table-stripped table-bordered">
+    <tr>
+        <th>Students</th>
+        <th>Feedbacks</th>
+        <th>Date</th>
+    </tr>
+    @foreach(var feedback in Model)
+            {
+                <tr>
+                    <td>@feedback.exmne_Id</td>
+                    <td>@feedback.fb_Feedbacks</td>
+                    <td>@feedback.fb_Date</td>
+                </tr>
+            }
+</table>
+

@@ -1,0 +1,45 @@
+﻿@model List<ONLINE_EXAMINATION_SYSTEM.Models.Exam>
+
+    @{
+        ViewBag.Title = "Ongoing Exams";
+    }
+
+    <h2>Ongoing Exams</h2>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <p style="color:red;">@ViewBag.Message</p>
+    }
+    else if (Model != null && Model.Count > 0)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Exam Title</th>
+                    <th>Time Limit (minutes)</th>
+                    <th>Start Exam</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var exam in Model)
+                {
+                    <tr>
+                        <td>@exam.exam_Title</td>
+                        <td>@exam.timeLimit</td>
+                        <td>
+                            <form action="@Url.Action("StartExam", "Exam")" method="post">
+                                <input type="hidden" name="examId" value="@exam.Id" />
+                                <button type="submit" class="btn btn-success">Start Exam</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No exams found.</p>
+    }
+
+

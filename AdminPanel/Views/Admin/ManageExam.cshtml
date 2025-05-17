@@ -1,0 +1,60 @@
+﻿@model List<AdminPanel.Models.Exam>
+@{
+    ViewBag.Title = "ManageExam";
+}
+
+<h2>ManageExam</h2>
+<br />
+<br />
+@if (@TempData["success"] != null)
+{
+    <span class="alert alert-success">@TempData["success"]</span>
+}
+else
+{
+    <span class="alert alert-danger">@TempData["error"]</span>
+}
+<br />
+<br />
+<br />
+
+
+    <link rel="stylesheet" href="~/Css/button.css" />
+
+   
+    <a href="@Url.Action("Admin","Admin")" style="border-radius:16px;" class="btn btn-info"><i class="fa fa-arrow-left"></i>&nbsp;Back to Dashboard</a>
+
+
+<table class="table table-responsive table-bordered table-stripped">
+    <tr>
+        <th style="text-align:center;">Exam Title</th>
+        <th style="text-align:center;">Course</th>
+        <th style="text-align:center;">Description</th>
+        <th style="text-align:center;">Time-Limit</th>
+        <th style="text-align:center;">Display-Limit</th>
+        <th style="width:23%; text-align:center;">Action</th>
+    </tr>
+    @foreach (var exam in Model)
+    {
+        <tr>
+            <td>@exam.exam_Title</td>
+            <td>@exam.exam_CourseId</td>
+            <td>@exam.exam_Description</td>
+            <td>@exam.exam_TimeValue</td>
+            <td>@exam.exam_QuestionLimit</td>
+            <td><a href="@Url.Action("EditExam","Admin", new {exam_Id=@exam.exam_Id})"style="border-radius:16px;" class="btn btn-info">Manage</a> &nbsp;
+            <a href="@Url.Action("AddQuestion", "Admin", new {exam_Id1=@exam.exam_Id })" style="border-radius:16px;" class="btn btn-warning">Question
+            </a>&nbsp;<a href="#" onclick="deleteConfirm(@exam.exam_Id)" style="border-radius:16px;" class="btn btn-danger">Delete</a></td>
+        </tr>
+    }
+</table>
+<script>
+    function deleteConfirm(exam_Id) {
+        var isConfirmed = confirm("Are You Sure Delete This Exam !!!");
+        if (isConfirmed) {
+            window.location.href = '@Url.Action("deleteExam","Admin")' + '?exam_Id=' + exam_Id;
+        }
+    }
+
+</script>
+

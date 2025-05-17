@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="~/Content/CSS/style.css" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+ 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" style="font-size:3rem;" href="#">Online Examination System</a>
+        <!-- Hamburger Menu -->
+        <div class="hamburger" onclick="toggleSidebar()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <h4 class="text-center mt-3">Dashboard</h4>
+                <div class="list-group" style="font-size:1.2rem;">
+                   
+                    <a href="@Url.Action("Home", "Home")" class="list-group-item list-group-item-action"><i class="fas fa-home"></i> Home</a>
+                    <a href="@Url.Action("UpcomingExam","Exam")" class="list-group-item list-group-item-action"><i class="fas fa-calendar-alt"></i> Upcoming Exams</a>
+                    <a href="@Url.Action("OngoingExam", "Exam")" class="list-group-item list-group-item-action"><i class="fas fa-tasks"></i> Ongoing Exams</a>
+                    <a href="@Url.Action("MyResult", "Dashboard")" class="list-group-item list-group-item-action"><i class="fas fa-chart-line"></i> My Results</a>
+                    <a href="@Url.Action("Logout", "Dashboard")" class="list-group-item list-group-item-action"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 content">
+                <h1 class="mt-4">Welcome to Your Dashboard!</h1>
+                <p>Here you can manage your exams and view results</p>
+                @foreach (var detail in ViewBag.StudentName)
+                {
+                    <p ><strong>Student Name : @detail</strong></p>
+                }
+                
+                @foreach (var detail in ViewBag.StudentUsername)
+                {
+                    <p><strong>Username : </strong>@detail</p>
+                }
+                
+                @foreach (var detail in ViewBag.StudentStatus)
+                {
+                    <p><strong>Status : </strong><strong style="color:green">@detail</strong></p>
+                }
+                <div class="row mt-4">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h3 class="card-title">Upcoming Exams</h3>
+                                <p class="card-text">View and prepare for your upcoming exams.</p>
+                                <a href="@Url.Action("UpcomingExam", "Exam")" class="btn btn-primary">View Exams</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h3 class="card-title">Ongoing Exams</h3>
+                                <p class="card-text">Check the status of ongoing exams.</p>
+                                <a href="@Url.Action("OngoingExam", "Exam")" class="btn btn-primary">View Exams</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center mt-4">
+        <p>&copy; 2024- My Online Exam Application</p>
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
+
+

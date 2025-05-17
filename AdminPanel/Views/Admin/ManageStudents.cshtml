@@ -1,0 +1,155 @@
+﻿@model List<AdminPanel.Models.Students>
+@{
+    ViewBag.Title = "ManageStudents";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+        <div class="container mt-4">
+            <h2 class="text-center mb-4">Manage Students</h2>         
+
+        </div> 
+
+
+ @*@{Html.RenderPartial("_partial_View");}*@
+</body>
+</html>
+
+@if (TempData["success"] != null)
+{
+    <span class="alert alert-success">@TempData["success"]</span>
+}
+else
+{
+    <span class="alert alert-danger">@TempData["error"]</span>
+}
+<br /><br />
+<!-- Add New User Button -->
+      <div class="text-right mb-3">
+          <a href="@Url.Action("CreateStudent", "Admin")" class="btn btn-success">Add New Student</a>
+          <link rel="stylesheet" href="~/Css/button.css" />
+          <a href="@Url.Action("Admin","Admin")" style="float:left;" class="btn btn-info"><i class="fa fa-arrow-left"></i>&nbsp;Back to Dashboard</a>
+      </div>
+
+<!-- Users Table -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Course</th>
+            <th>Class</th>
+            <th>Gender</th>
+            <th>Birthdate</th>
+            <th>Yearlevel</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Status</th>
+            <th>Token</th>
+            <th>Edit</th>
+            <th>Delete</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.exmne_Id</td>
+                    <td>@user.exmne_Fullname</td>
+                    <td>@user.exmne_CourseName</td>
+                    <td>@user.exmne_ClassId</td>
+                    <td>@user.exmne_Gender</td>
+                    <td>@user.exmne_Birthdate</td>
+                    <td>@user.exmne_Yearlevel</td>
+                    <td>@user.exmne_Username</td>
+                    <td>@user.exmne_Password</td>
+                    @if (user.exmne_Status == "active")
+                    {
+                        <td class=" text text-success">@user.exmne_Status</td>
+                    }
+                    else
+                    {
+                        <td class=" text text-danger">@user.exmne_Status</td>
+                    }
+                    <td>@user.exmne_SessionToken</td>
+                    <td><a href="@Url.Action("EditStudents", "Admin", new { studid = user.exmne_Id })" class="btn btn-primary btn-sm">Edit</a></td>
+                    <td><a href="#" onclick="confirmDelete(@user.exmne_Id)" class="btn btn-danger btn-sm">Delete</a></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No users found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function confirmDelete(exmne_Id) {
+        var Isconfirmed = confirm("Are You Sure Want to delete the record with ID :" + exmne_Id + "?");
+
+        if (Isconfirmed) {
+            window.location.href = '@Url.Action("DeleteStudents","Admin")' + '?exmne_Id=' + exmne_Id;
+        }
+    }
+
+
+
+    //get Course & On Course => Class
+    $(document).ready(function () {
+        $("#courseDropdown").change(function () {
+            debugger
+            var courseid = $(this).val();
+            //alert(catid);
+            if (courseid) {
+            $.ajax({
+
+                url: '@Url.Action("getStudentClass","Admin")',
+                type: 'POST',
+                data: { courseid: courseid }, //before :is variable after : is value
+
+                success: function (data) {
+                    if (data.length > 0) {
+
+                        var classDropdown = $('#classDropdown');
+                        alert
+                        classDropdown.empty(); //clear existing options
+                        classDropdown.append('<option value="">Select class</option>')
+
+                        $.each(data, function (index, item) {
+                            classDropdown.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                        });
+                    }
+                    else {
+                        $('#classDropdown').empty().append('<option value="">No classes available</option>');
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error loading classes:" + error);
+                }
+            });
+        }
+        else
+            {
+            $('#classDropdown').empty().append('<option value="">Select Class</option>');
+        }
+
+        });
+    });
+
+</script>
+
+
+
+

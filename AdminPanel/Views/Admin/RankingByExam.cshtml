@@ -1,0 +1,29 @@
+﻿@model List<AdminPanel.Models.Exam>
+@{
+    ViewBag.Title = "RankingByExam";
+}
+
+<h2>RankingByExam</h2>
+<br />
+<br />
+<a href="@Url.Action("Admin","Admin")">Back to Dashboard</a>
+<br />
+<br />
+<table class="table table-responsive table-stripped table-bordered">
+    <tr>
+        <th>Exam-Title</th>
+        <th>Course</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+    @foreach (var exam in Model)
+    {
+        <tr>
+            <td>@exam.exam_Title</td>
+            <td>@exam.exam_CourseName</td>
+            <td>@exam.exam_Description</td>
+            <td><a href="#" class="btn btn-warning">View</a></td>
+        </tr>
+    }
+</table>
+

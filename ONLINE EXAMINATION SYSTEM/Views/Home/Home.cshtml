@@ -1,0 +1,270 @@
+﻿@model ONLINE_EXAMINATION_SYSTEM.Models.Class
+@{
+    ViewBag.Title = "Home";
+}
+
+<html>
+<head>
+    <style>
+        /* CSS for Home Page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .header img {
+                height: 120px;
+                width: auto;
+                margin: 0 10px;
+            }
+
+        .jumbotron {
+            padding: 2rem 1rem;
+            border-radius: 0.3rem;
+            background-color: white;
+            margin: 20px auto;
+        }
+
+        .form-container {
+            margin: 30px auto;
+            width: 50%;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+            .form-container form select,
+            .form-container form button,
+            .form-container form a {
+                height: 100%;
+                width: 100%;
+                margin: 10px 0;
+                padding: 10px;
+                font-size: 2rem;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .form-container form button,
+            .form-container form a {
+                background-color: #007bff;
+                color: white;
+                cursor: pointer;
+            }
+
+                .form-container form button:hover,
+                .form-container form a {
+                    background-color: #0056b3;
+                }
+
+        .card {
+            border: 1px solid #007bff;
+            border-radius: 8px;
+        }
+
+        .card-header {
+            font-weight: bold;
+        }
+
+        .card-body h5 {
+            color: #0066cc;
+        }
+
+        .btn-outline-primary {
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+            .btn-outline-primary:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+        .form-group {
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="~/Content/Images/Header.png" alt="Header Image" />
+    </div>
+
+    <div class="container mt-5">
+        <div class="jumbotron text-center">
+            <h2 class="display-4" style="color: #007bff;"> Welcome to the Online Examination System</h2>
+            <h3 class="display-4" style="color: #007bff;">Your one-stop platform for managing and participating in online exams seamlessly.</h3>
+            <p class="lead" style="color: #333;">Stay organized and achieve success in your academics with ease!</p>
+            <hr class="my-4">
+            <p>Use the login below to get started.</p>
+        </div>
+
+        <div class="form-container">
+            <h3 class="text-center" style="color: #007bff; padding-bottom:20px;">Select Your Details to Proceed</h3>
+            <form action="@Url.Action("Home","Home")" method="post">
+
+                <div class="form-group">
+                    @Html.Label("Select Course")
+                    @Html.DropDownListFor(model => model.course_Id, (SelectList)ViewBag.CourseList, "Select Course", new { @class = "form-control", id = "courseDropdown" })
+                    @Html.ValidationMessageFor(model => model.course_Id, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("Select Class")
+                    @Html.DropDownListFor(model => model.class_Id, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "Select Class", new { @class = "form-control", id = "classDropdown" })
+                    @Html.ValidationMessageFor(model => model.class_Id, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("Select RollNo")
+                    @Html.DropDownListFor(model => model.roll_Id, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "Select Rollno", new { @class = "form-control", id = "rollnoDropdown" })
+                    @Html.ValidationMessageFor(model => model.roll_Id, "", new { @class = "text-danger" })
+                </div>
+                <a href="@Url.Action("Login","Login")" class="btn-btn success">Submit</a>
+                @*<button class="btn  btn-primary" type="submit">Submit</button>*@
+                <button type="reset">Cancel</button>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+</html>
+
+
+@if (TempData["success"] != null)
+{
+    <span class="alert alert-success">@TempData["success"]</span>
+}
+else
+{
+    <span class="alert alert-danger">@TempData["error"]</span>
+}
+<script>
+    //Ajax Implement
+    $(document).ready(function () {
+        $("#courseDropdown").change(function () {
+            debugger
+            var courseid = $(this).val();
+            //alert(catid);
+            if (courseid) {
+            $.ajax({
+
+                url: '@Url.Action("GetClass","Home")',
+                type: 'POST',
+                data: { courseid: courseid }, //before :is variable after : is value
+
+                success: function (data) {
+                    if (data.length > 0) {
+
+                        var classDropdown = $('#classDropdown');
+                        alert
+                        classDropdown.empty(); //clear existing options
+                        classDropdown.append('<option value="">Select class</option>')
+
+                        $.each(data, function (index, item) {
+                            classDropdown.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                        });
+                    }
+                    else {
+                        $('#classDropdown').empty().append('<option value="">No classes available</option>');
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    alert("Error loading classes:" + error);
+                }
+            });
+        }
+        else
+            {
+            $('#classDropdown').empty().append('<option value="">Select Class</option>');
+        }
+
+        });
+    });
+
+
+
+
+
+
+$(document).ready(function () {
+    $("#classDropdown").change(function () {
+        debugger
+        var classid = $(this).val();
+        //alert(catid);
+        if (classid) {
+        $.ajax({
+
+            url: '@Url.Action("GetRollno","Home")',
+            type: 'POST',
+            data: { classid: classid }, //before :is variable after : is value
+
+            success: function (data) {
+                if (data.length > 0) {
+
+                    var classDropdown = $('#rollnoDropdown');
+                    alert
+                    classDropdown.empty(); //clear existing options
+                    classDropdown.append('<option value="">Select Rollno</option>')
+
+                    $.each(data, function (index, item) {
+                        classDropdown.append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    });
+                }
+                else {
+                    $('#rollnoDropdown').empty().append('<option value="">No Rollno available</option>');
+                }
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error loading rollno:" + error);
+            }
+        });
+    }
+    else
+        {
+        $('#rollnoDropdown').empty().append('<option value="">Select Rollno</option>');
+    }
+
+    });
+});
+
+
+
+    //Ajax Implement
+    $(document).ready(function () {
+        $("#rollnoDropdown").change(function () {
+            /*debugger */
+            var rollid = $("#rollnoDropdown").val();
+            //alert(catid);
+            $.ajax({
+
+                url: '/Home/Home/' + rollid,
+                type: 'POST',
+                data: { rollid: rollid }, //before :is variable after : is value
+
+                success: function (data) {
+                        if (data.rollid != 0) {
+                            alert(rollid);
+                        }
+                        else {
+                            alert("Error in set RollNumber");
+                        }
+
+                    },
+                error: function () {
+                        alert("Error in Ajax");
+                    }
+                })
+        })
+    })
+
+</script>
